@@ -1,0 +1,108 @@
+Config Switch
+
+enable
+	
+	
+	delete flash:vlan.dat
+	show vlan brief
+
+	configure terminal
+		hostname <name>
+		enable secret <pass>
+		line console 0
+			password <pass>
+			login
+			line vty 0 15
+			login 
+			exit
+		service password-encryption
+		banner motd "Authorized Access Only"
+		
+			# activar vlan 99
+		interface vlan 99
+			no shutdown
+			# seguridad en el puerto
+		interface fa 0/18   
+			switchport port-security
+				# número máximo de direcciones MAC
+			switchport port-security maximum 1
+				#agregar la dirección MAC a la configuración en ejecución
+			switchport port-security mac-address sticky
+				#puerto se desconecte de forma automática en caso de que se viole la seguridad.
+			switchport port-security violation shutdown
+
+	show port-security interface fa0/18
+********
+			# Establezca la dirección IP del switch en la interfaz virtual interna VLAN 99. 
+			# La VLAN debe primero crearse en el switch antes de que pueda asignarse la dirección.
+
+		vlan 99
+			exit
+		interface vlan 99
+			ip addres <ip> <mask>
+			no shutdown
+			exit
+			#Asignar puertos a la VLAN del switch.
+		interface fa0/1 
+			switchport access vlan 99
+			exit
+			# especificae una dirección de gateway por defecto que apunta a un router o switch de capa 3.
+		ip default-gateway <ip> 
+			exit
+		wr
+		exit
+		# Muestre las direcciones MAC
+	show mac-address-table
+		# Para quitar las direcciones MAC existentes,
+	clear mac-address-table dynamic
+			# Dirección MAC estática en la interfaz
+		mac-address-table static <mac-address> vlan <id vlan> interface <type interface> <id interface>
+		***
+# seguridad en los puertos 
+		***
+		interface fa0/X
+			switchport port-security   # *
+			switchport port-security mac-address <mac-address>
+			switchport port-security maximum <1-132>
+			switchport port-security mac-address sticky 			
+			switchport port-security violation protect 
+			switchport port-security violation restrict 
+			switchport port-security violation shutdown
+			end
+	show port-security interface fastEthernet 0/X
+
+******
+		show history 
+		terminal history
+		terminal no history
+		terminal history size 50
+		terminal no history size  # tamaño a 10 lineas de comando
+*
+
+		#telnet y ssh
+
+		line vty 0 15
+		 	transport input telnet
+		 	transport input all  # permite todos los protocolos de tranporte
+		 	exit
+		 # SSH
+
+		hostname <name>
+		ip domain-name <mydomain.com>
+		crypto key generate rsa
+		exit
+	show ip ssh
+	show ssh
+	conf t
+		ip ssh version 2
+		line vty 0 15
+			transport input SSH
+		ssh {timeout segundos | authentication-retries número}
+	show ip ssh o show ssh
+	wr
+
+	show flash
+	boot system <c2960-lanbase-mz.122-25.SEE1.bin>	# para cambiar el imagen  de inicio 
+
+
+
