@@ -1,3 +1,17 @@
+····················◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘
+ena
+conf t
+hostname S3
+no ip domain lookup 
+enable secret class 
+line console 0
+password cisco
+login
+line vty 0 15 
+password cisco
+login
+
+◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘◘····················
 Config Switch
 
 enable
@@ -105,4 +119,64 @@ enable
 	boot system <c2960-lanbase-mz.122-25.SEE1.bin>	# para cambiar el imagen  de inicio 
 
 
+***** VLAN*****
 
+enable
+	delete flash:vlan.dat
+	show vlan brief
+	configure terminal
+
+		vlan <1-1005>
+			name <de la vlan>
+		vlan <1-1005>
+			name <de la vlan>
+		exit
+		do show vlan
+
+		interface fastEthernet  0/11
+		switchport mode access  #◘ configura la interfaz como un puerto de acceso.
+		switchport access vlan <id> # asigna una VLAN al puerto.
+			# troncales
+		interface FastEthernet 0/3
+		switchport mode trunk
+		switchport trunk native vlan 99 
+
+
+
+*----vtp
+		
+		interface fastEthernet  0/11
+			switchport mode access 
+		
+	show vtp status
+
+		#
+		vtp mode <server/client/transparent>
+		vtp domain <name>
+		vtp password <pass>
+
+		# trunks
+		interface fa0/1
+			switchport mode trunk
+			switchport trunk native vlan 99
+			no sh
+			exit
+
+		# seguridad  en los puertos
+		in r f0/6, f0/11, f0/18
+			switchport port-security
+			switchport port-security maximum 1
+			switchport port-security mac-address sticky
+
+		# Configúrelas en el servidor VTP
+
+		vlan <id>
+		name <name>
+		exit
+		# en los clientes 
+		show vlan brief
+
+		# dirección de interfaz de administración en los switches.
+		interface vlan 99
+			ip addres
+			 <> <> 
