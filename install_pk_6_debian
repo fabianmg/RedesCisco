@@ -1,0 +1,15 @@
+
+
+
+
+
+vim /etc/apt/sources.list
+  deb http://ftp.debian.org/debian experimental main
+
+apt-get update
+
+install the eglibc package
+
+apt-get -t experimental install libc6-amd64 libc6-dev libc6-dbg
+
+apt-get update 
