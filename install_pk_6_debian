@@ -13,3 +13,9 @@ install the eglibc package
 apt-get -t experimental install libc6-amd64 libc6-dev libc6-dbg
 
 apt-get update 
+
+################
+
+agregar i386 e instalar libglib2
+
+apt-get install libglib2.0-0:i386
